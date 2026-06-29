@@ -5,15 +5,18 @@ This is a summary of the following project for the 12-week summer internship at 
 
 # Progress
 Week 0
-- Description coming soon
 
-Week 1
-- Objectives
-Combine each month's CRMLSListing and CRMLSSold CSVs into two unified datasets.
+- Description coming soon
+--------------------------
+WEEK 1
+
+Objectives:
+- Combine each month's CRMLSListing and CRMLSSold CSVs into two unified datasets.
 Filter both datasets down to Residential property types only.
 
-- How to Run
-Set the filepath of data_p (top oßf script) to the folder containing the monthly CSV files. Run the script with python3 week_1.py. Upon completion, ConcatenatedCRMLSListing.csv and ConcatenatedCRMLSSold.csv will be output to the folder the script is run from.
+How to Run:
+- Set the filepath of data_p (top oßf script) to the folder containing the monthly CSV files. Run the script with python3 week_1.py. Upon completion, ConcatenatedCRMLSListing.csv and ConcatenatedCRMLSSold.csv will be output to the folder the script is run from.
+--------------------------
+WEEK 2
 
-Week 2
 - Description coming soon
