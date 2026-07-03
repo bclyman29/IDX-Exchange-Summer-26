@@ -3,13 +3,12 @@ from pathlib import Path
 
 data_p = Path("/Users/impossibear04/Downloads/CRMLSListings")
 
-# Load all monthly Sold files (excluding the pre-concatenated file from Week 1)
 sold_data = sorted(data_p.glob("CRMLSSold*.csv"))
 sold_data = [pd.read_csv(f, low_memory=False, encoding="windows-1252") for f in sold_data
              if "Concatenated" not in f.name]
 sold = pd.concat(sold_data, ignore_index=True)
 
-# Residential vs other property type share (requires unfiltered data)
+# Residential vs other property type share 
 print("Property type share (%):")
 print(sold["PropertyType"].value_counts(normalize=True).mul(100).round(2))
 
