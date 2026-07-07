@@ -42,9 +42,9 @@ print(len(df_listing_f))
 df_listing_f.to_csv(data_p / "ConcatenatedCRMLSListing.csv", index=False)
 
 # FINAL RESULTS
-# Sold dataset total rows before concatenation :655362
-# Sold dataset total rows after concatenation :655362
-# Sold dataset total rows after filtering :438115
-# Listing dataset total rows before concatenation :729251
-# Listing dataset total rows after concatenation :729251
-# Listing dataset total rows after filtering :480383
+# Sold dataset total rows before concatenation :680885
+# Sold dataset total rows after concatenation :680885
+# Sold dataset total rows after filtering :455658
+# Listing dataset total rows before concatenation :766706
+# Listing dataset total rows after concatenation :766706
+# Listing dataset total rows after filtering :504466ß

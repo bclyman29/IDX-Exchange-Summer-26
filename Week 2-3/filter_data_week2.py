@@ -17,7 +17,7 @@ print("\nRows before Residential filter:", len(sold))
 sold = sold[sold["PropertyType"] == "Residential"]
 print("Rows after Residential filter:", len(sold))
 
-# Dataset Characteristics
+# Dataset Characteristicsß
 row_count = len(sold)
 col_count = len(sold.columns)
 print(f"Row count: {row_count}")
@@ -88,13 +88,13 @@ sold.to_csv("CRMLSSold_Clean.csv", index=False)
 
 # ------------ FINAL RESULTS
 # Property type share (%):
-# Residential: 66.85%ß
-# Non-Residential: 33.15%
+# Residential: 66.92%
+# Non-Residential: 33.08%
 
-# Rows before Residential filter: 655362
-# Rows after Residential filter: 438115
+# Rows before Residential filter: 680885
+# Rows after Residential filter: 455658
 
-# Row count: 438115
+# Row count: 455658
 # Column count: 79
 # Data types: str, object, float64, int64
 # Unique property types: ['Residential', 'ResedentialLease', 'CommercialSale', 'CommericalLease', 'ManufacturedInPark', 'BusinessOpportunity', 'Land'] 
@@ -106,15 +106,15 @@ sold.to_csv("CRMLSSold_Clean.csv", index=False)
 # BelowGradeFinishedArea, BasementYN, LotSizeDimensions,
 # BuilderName, BuildingAreaTotal, CoBuyerAgentFirstName
 
-# ClosePrice   - min: $525 | max: $110,000,000 | mean: $1,121,740 | median: $815,000 |
-# LivingArea   - min: 0 | max: 17,021,320 | mean: 1,900 | median: 1,641 |
+# ClosePrice   - min: $525 | max: $110,000,000 | mean: $1,124,047 | median: $815,000 |
+# LivingArea   - min: 0 | max: 17,021,320 | mean: 1,900 | median: 1,643 |
 # DaysOnMarket - min: -288 | max: 12,430 | mean: 38 | median: 19 |
 
 # Median close price: $815,000
-# Average close price: $1,121,740
-# Sold above list price: 173,237 (39.54%)
-# Sold at or below list price: 264,876 (60.46%)
-# Date consistency issues (CloseDate before ListingContractDate): 78 rows
+# Average close price: $1,124,047
+# Sold above list price: 180,042 (39.51%)
+# Sold at or below list price: 275,614 (60.49%)
+# Date consistency issues (CloseDate before ListingContractDate): 81 rows
 
 # Top 5 counties by median close price:
 # Del Norte:     $6,742,500
