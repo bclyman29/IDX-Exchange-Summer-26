@@ -3,10 +3,7 @@ from pathlib import Path
 
 data_p = Path("/Users/impossibear04/Downloads/CRMLSListings")
 
-sold_data = sorted(data_p.glob("CRMLSSold*.csv"))
-sold_data = [pd.read_csv(f, low_memory=False, encoding="windows-1252") for f in sold_data
-             if "Concatenated" not in f.name]
-sold = pd.concat(sold_data, ignore_index=True)
+sold = pd.read_csv(data_p / "ConcatenatedCRMLSSold.csv", low_memory=False, encoding="utf-8")
 
 # Residential vs other property type share 
 print("Property type share (%):")
@@ -54,6 +51,33 @@ print(null_summary)
 print("\nFlagged columns (>90% missing):")
 print(null_summary.index[null_summary["Flag >90%"]].tolist())
 
+cols_to_drop = null_summary.index[null_summary["Flag >90%"]].tolist()
+sold = sold.drop(columns=cols_to_drop)
+print(f"\nDropped {len(cols_to_drop)} columns, {len(sold.columns)} remaining")
+
+# ADDING LISTING FOR FUTURE ANALYSIS
+listing = pd.read_csv(data_p / "ConcatenatedCRMLSListing.csv", low_memory=False, encoding="utf-8")
+
+listing = listing[listing["PropertyType"] == "Residential"]
+
+# Missing value report
+listing_null_summary = pd.DataFrame({
+    "Null Count": listing.isna().sum(),
+    "Null %": (listing.isna().mean() * 100).round(2)
+}).sort_values("Null %", ascending=False)
+
+listing_null_summary["Flag >90%"] = listing_null_summary["Null %"] > 90
+
+print("\nListing flagged columns (>90% missing):")
+print(listing_null_summary.index[listing_null_summary["Flag >90%"]].tolist())
+
+# Drop >90% null columns
+listing_cols_to_drop = listing_null_summary.index[listing_null_summary["Flag >90%"]].tolist()
+listing = listing.drop(columns=listing_cols_to_drop)
+
+listing.to_csv(data_p / "CRMLSListing_Clean.csv", index=False)
+
+
 #Summary Stats for ClosePrice, LivingArea, and DaysOnMarket
 summary_stats = sold[["ClosePrice", "LivingArea", "DaysOnMarket"]].describe(percentiles=[.10, .25, .50, .75, .90])
 print(summary_stats)
@@ -84,7 +108,7 @@ print(f"\nRows where CloseDate is before ListingContractDate: {len(date_flag)}")
 print("\nTop 5 counties by median close price:")
 print(sold.groupby("CountyOrParish")["ClosePrice"].median().sort_values(ascending=False).head(5))
 
-sold.to_csv("CRMLSSold_Clean.csv", index=False)
+sold.to_csv(data_p / "CRMLSSold_Clean.csv", index=False)
 
 # ------------ FINAL RESULTS
 # Property type share (%):

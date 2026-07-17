@@ -22,7 +22,7 @@ df_sold_f = df_sold[df_sold.PropertyType == "Residential"]
 print("Sold dataset total rows after filtering:")
 print(len(df_sold_f))
 
-df_sold_f.to_csv(data_p / "ConcatenatedCRMLSSold.csv", index=False)
+df_sold.to_csv(data_p / "ConcatenatedCRMLSSold.csv", index=False)
 
 # LISTING
 # Same process as Sold above
@@ -39,7 +39,7 @@ df_listing_f = df_listing[df_listing.PropertyType == "Residential"]
 print("Listing dataset total rows after filtering:")
 print(len(df_listing_f))
 
-df_listing_f.to_csv(data_p / "ConcatenatedCRMLSListing.csv", index=False)
+df_listing.to_csv(data_p / "ConcatenatedCRMLSListing.csv", index=False)
 
 # FINAL RESULTS
 # Sold dataset total rows before concatenation :680885
