@@ -76,6 +76,28 @@ listing["bad_coords_flag"] = (
 print(f"Sold out-of-range coords:    {sold['bad_coords_flag'].sum()}")
 print(f"Listing out-of-range coords: {listing['bad_coords_flag'].sum()}")
 
+# Numeric Validation Checks
+print("\nSold invalid numeric flags:")
+sold["closeprice_flag"] = sold["ClosePrice"] <= 0
+print(f"Invalid ClosePrice (<= 0):      {sold['closeprice_flag'].sum()}")
+sold["livingarea_flag"] = sold["LivingArea"] <= 0
+print(f"Invalid LivingArea (<= 0):      {sold['livingarea_flag'].sum()}")
+sold["dom_flag"] = sold["DaysOnMarket"] < 0
+print(f"Negative DaysOnMarket:          {sold['dom_flag'].sum()}")
+sold["neg_rooms_flag"] = (sold["BathroomsTotalInteger"] < 0) | (sold["BedroomsTotal"] < 0)
+print(f"Negative Bedrooms/Bathrooms:    {sold['neg_rooms_flag'].sum()}")
+ 
+print("\nListing invalid numeric flags:")
+listing["closeprice_flag"] = listing["ClosePrice"] <= 0
+print(f"Invalid ClosePrice (<= 0):      {listing['closeprice_flag'].sum()}")
+listing["livingarea_flag"] = listing["LivingArea"] <= 0
+print(f"Invalid LivingArea (<= 0):      {listing['livingarea_flag'].sum()}")
+listing["dom_flag"] = listing["DaysOnMarket"] < 0
+print(f"Negative DaysOnMarket:          {listing['dom_flag'].sum()}")
+listing["neg_rooms_flag"] = (listing["BathroomsTotalInteger"] < 0) | (listing["BedroomsTotal"] < 0)
+print(f"Negative Bedrooms/Bathrooms:    {listing['neg_rooms_flag'].sum()}")
+
+
 # Results as of Now
 #Date field dtypes after conversion:
 #CloseDate                   datetime64[us]
@@ -103,5 +125,17 @@ print(f"Listing out-of-range coords: {listing['bad_coords_flag'].sum()}")
 #Sold out-of-range coords:    114
 #Listing out-of-range coords: 226
 
+#Sold invalid numeric flags:
+#Invalid ClosePrice (<= 0):      0
+#Invalid LivingArea (<= 0):      161
+#Negative DaysOnMarket:          48
+#Negative Bedrooms/Bathrooms:    0
 
-# TO DO : Numerical Consistency Check, Dropping Useless Columns, Creating Figures, etc.
+#Listing invalid numeric flags:
+#Invalid ClosePrice (<= 0):      0
+#Invalid LivingArea (<= 0):      261
+#Negative DaysOnMarket:          43
+#Negative Bedrooms/Bathrooms:    0
+
+
+# TO DO : Dropping Useless Columns, Further Refinement, Creating Figures, etc.
