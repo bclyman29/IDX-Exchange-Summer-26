@@ -167,8 +167,10 @@ listing_clean = listing.copy()
 listing_clean.to_csv(data_p / "CRMLSListing_Final.csv", index=False)
 
 # Results 
-#Sold rows before cleaning: 455658
-#Listing rows before cleaning: 504466
+#Sold rows before cleaning:    455658 
+#Sold columns before cleaning: 66
+#Listing rows before cleaning:    504466
+#Listing columns before cleaning: 70
 
 #Date field dtypes after conversion:
 #CloseDate                   datetime64[us]
@@ -177,15 +179,17 @@ listing_clean.to_csv(data_p / "CRMLSListing_Final.csv", index=False)
 #ContractStatusChangeDate    datetime64[us]
 #dtype: object
 
-#Sold date flags:
-#Listing after close:        81
-#Purchase after close:       92
-#Negative timeline (either): 169
+#Sold date consistency flags:
+#  Listing after close:        81
+#  Purchase after close:       92
+#  Negative timeline (either): 169
+#  Purchase after listing:     314
 
-#Listing date flags:
-#Listing after close:        82
-#Purchase after close:       94
-#Negative timeline (either): 171
+#Listing date consistency flags:
+#  Listing after close:        82
+#  Purchase after close:       94
+#  Negative timeline (either): 171
+#  Purchase after listing:     312
 
 #Sold missing coordinates:    53637
 #Listing missing coordinates: 49467
@@ -197,60 +201,64 @@ listing_clean.to_csv(data_p / "CRMLSListing_Final.csv", index=False)
 #Listing out-of-range coords: 226
 
 #Sold invalid numeric flags:
-#Invalid ClosePrice (<= 0):      0
-#Invalid LivingArea (<= 0):      161
-#Negative DaysOnMarket:          48
-#Negative Bedrooms/Bathrooms:    0
+#  Invalid ClosePrice (<= 0):   0
+#  Invalid LivingArea (<= 0):   161
+#  Negative DaysOnMarket:       48
+#  Negative Bedrooms/Bathrooms: 0
+#  Rows removed: 209
 
 #Listing invalid numeric flags:
-#Invalid ClosePrice (<= 0):      0
-#Invalid LivingArea (<= 0):      261
-#Negative DaysOnMarket:          43
-#Negative Bedrooms/Bathrooms:    0
+#  Invalid ClosePrice (<= 0):   0
+#  Invalid LivingArea (<= 0):   261
+#  Negative DaysOnMarket:       43
+#  Negative Bedrooms/Bathrooms: 0
+#  Rows removed: 304
 
 #Sold numeric dtypes:
-  #AssociationFee: float64
-  #BathroomsTotalInteger: float64
-  #BedroomsTotal: float64
-  #ClosePrice: float64
-  #DaysOnMarket: int64
-  #GarageSpaces: float64
-  #Latitude: float64
-  #ListingKeyNumeric: int64
-  #ListPrice: float64
-  #LivingArea: float64
-  #Longitude: float64
-  #LotSizeAcres: float64
-  #LotSizeArea: float64
-  #LotSizeSquareFeet: float64
-  #MainLevelBedrooms: float64
-  #OriginalListPrice: float64
-  #ParkingTotal: float64
-  #Stories: float64
-  #StreetNumberNumeric: float64
-  #YearBuilt: float64
+ # AssociationFee: float64
+ # BathroomsTotalInteger: float64
+ # BedroomsTotal: float64
+ # ClosePrice: float64
+ # DaysOnMarket: int64
+ # GarageSpaces: float64
+ # Latitude: float64
+#  ListingKeyNumeric: int64
+# ListPrice: float64
+#  LivingArea: float64
+#  Longitude: float64
+#  LotSizeAcres: float64
+#  LotSizeArea: float64
+#  LotSizeSquareFeet: float64
+#  MainLevelBedrooms: float64
+#  OriginalListPrice: float64
+#  ParkingTotal: float64
+#  Stories: float64
+#  StreetNumberNumeric: float64
+ # YearBuilt: float64
 
 #Listing numeric dtypes:
-  #AssociationFee: float64
-  #BathroomsTotalInteger: float64
-  #BedroomsTotal: float64
-  #ClosePrice: float64
-  #DaysOnMarket: int64
-  #GarageSpaces: float64
-  #Latitude: float64
-  #ListingKeyNumeric: int64
-  #ListPrice: float64
-  #LivingArea: float64
-  #Longitude: float64
-  #LotSizeAcres: float64
-  #LotSizeArea: float64
-  #LotSizeSquareFeet: float64
-  #MainLevelBedrooms: float64
-  #OriginalListPrice: float64
-  #ParkingTotal: float64
-  #Stories: float64
-  #StreetNumberNumeric: float64
-  #YearBuilt: float64
+#  AssociationFee: float64
+#  BathroomsTotalInteger: float64
+#  BedroomsTotal: float64
+#  ClosePrice: float64
+#  DaysOnMarket: int64
+#  GarageSpaces: float64
+#  Latitude: float64
+#  ListingKeyNumeric: int64
+#  ListPrice: float64
+#  LivingArea: float64
+#  Longitude: float64
+#  LotSizeAcres: float64
+#  LotSizeArea: float64
+#  LotSizeSquareFeet: float64
+#  MainLevelBedrooms: float64
+#  OriginalListPrice: float64
+#  ParkingTotal: float64
+#  Stories: float64
+ # StreetNumberNumeric: float64
+ # YearBuilt: float64
 
-#Sold rows after cleaning:    455658
-#Listing rows after cleaning: 504466
+#Sold rows after cleaning:    455449
+#Sold columns after cleaning: 78
+#Listing rows after cleaning:    504162
+#Listing columns after cleaning: 82
