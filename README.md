@@ -48,4 +48,14 @@ Objectives:
 - Confirm all key numeric fields are properly typed.
 
 How to Run:
-Run the script with "python3 data_cleaning_week4-5.py". Upon completion, "CRMLSSold_Final.csv" and "CRMLSListing_Final.csv" will be saved to the same folder as before
+- Run the script with "python3 data_cleaning_week4-5.py". Upon completion, "CRMLSSold_Final.csv" and "CRMLSListing_Final.csv" will be saved to the same folder as before
+--------------------------
+WEEK 6
+
+Objectives:
+- Map each property to its Unified School District using a spatial join on Latitude and Longitude against the California School District boundary GeoJSON.
+- Engineer key market metrics: price ratio, close-to-original-list ratio, price per square foot, days on market, YrMo, listing-to-contract days, and contract-to-close days.
+- Generate a segmented summary table grouped by CountyOrParish.
+
+How to Run:
+- Set data_p to the folder containing the final cleaned datasets from Week 4-5 and the California School District GeoJSON file (DistrictAreas2526_-284845464123469011.geojson). Ensure geopandas is installed (pip3 install geopandas). Run the script with python3 market_metrics_etc_week_6.py. Upon completion, CRMLSSold_Engineered.csv and CRMLSListing_Engineered.csv will be saved to the same folder.
