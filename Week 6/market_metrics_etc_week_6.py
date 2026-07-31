@@ -15,7 +15,6 @@ print(f"Listing rows loaded: {len(listing)}")
 # School District Mapping
 # Match each property to its Unified School District using a spatial
 # join on Latitude/Longitude. Unified districts cover K-12 and are
-# the most commonly referenced in real estate searches.
 # Source: CA Open Data School District Areas 2024-25 (Shapefile)
 
 # Load and filter school district GeoJSON
@@ -79,6 +78,13 @@ sold["yr_mo"] = sold["CloseDate"].dt.strftime("%Y%m")
 sold["listing_to_contract_days"] = (sold["PurchaseContractDate"] - sold["ListingContractDate"]).dt.days
 sold["contract_to_close_days"] = (sold["CloseDate"] - sold["PurchaseContractDate"]).dt.days
 
+print("\nSold sample of engineered metrics:")
+print(sold[[
+    "ListingKey", "ClosePrice", "OriginalListPrice", "LivingArea",
+    "price_ratio", "price_per_sqft", "yr_mo",
+    "listing_to_contract_days", "contract_to_close_days"
+]].head())
+
 # Listing metrics
 listing["price_ratio"] = (listing["ClosePrice"] / listing["OriginalListPrice"]).round(4)
 listing["close_to_original_list_ratio"] = (listing["ClosePrice"] / listing["OriginalListPrice"]).round(4)
@@ -88,6 +94,13 @@ listing["month"] = listing["CloseDate"].dt.month
 listing["yr_mo"] = listing["CloseDate"].dt.strftime("%Y%m")
 listing["listing_to_contract_days"] = (listing["PurchaseContractDate"] - listing["ListingContractDate"]).dt.days
 listing["contract_to_close_days"] = (listing["CloseDate"] - listing["PurchaseContractDate"]).dt.days
+
+print("\nListing sample of engineered metrics:")
+print(listing[[
+    "ListingKey", "ClosePrice", "OriginalListPrice", "LivingArea",
+    "price_ratio", "price_per_sqft", "yr_mo",
+    "listing_to_contract_days", "contract_to_close_days"
+]].head())
 
 #Segment Analysis
 #Group by key dimensions to uncover market patterns.
@@ -111,12 +124,28 @@ listing.to_csv(data_p / "CRMLSListing_Engineered.csv", index=False)
 # Results:
 # Sold rows loaded:    455,280
 # Listing rows loaded: 503,991
-#
+
 # Sold district matched:   307,587 (67.6%)
 # Sold district unmatched: 147,693 (32.4%)
 # Listing district matched:   348,203 (69.1%)
 # Listing district unmatched: 155,788 (30.9%)
-#
+
+
+#Sold sample of engineered metrics:
+#   ListingKey  ClosePrice  ...  listing_to_contract_days  contract_to_close_days
+#0  1095075487   5000000.0  ...                       0.0                    63.0
+#1  1079166779    858000.0  ...                       0.0                     0.0
+#2  1075037759   1890500.0  ...                       0.0                     0.0
+#3  1067652762   2100000.0  ...                       0.0                    48.0
+#4  1061988701   2340000.0  ...                       0.0                     0.0
+
+#Listing sample of engineered metrics:
+#   ListingKey  ClosePrice  ...  listing_to_contract_days  contract_to_close_days
+#0  1159972295         NaN  ...                       NaN                     NaN
+#1  1159871345    320000.0  ...                     851.0                     0.0
+#2  1153320466    160000.0  ...                     804.0                    25.0
+#3  1146529264   2000000.0  ...                     785.0                    29.0
+#4  1118382573   3200000.0  ...                      58.0                   421.0
 
 #                total_sales  
 #CountyOrParish                                                                                                   
@@ -131,11 +160,10 @@ listing.to_csv(data_p / "CRMLSListing_Engineered.csv", index=False)
 #Alpine                    1          
 #Mono                     18
 
-
 # Engineered metrics added:
 #   price_ratio, close_to_original_list_ratio, price_per_sqft,
 #   year, month, yr_mo, listing_to_contract_days, contract_to_close_days
-#
+
 # Segment summary by County (top 10 by median close price):
 #   Del Norte:     $6,742,500 | PPSF: $4,778 | DOM: 160 | price_ratio: 0.81
 #   San Mateo:     $1,650,000 | PPSF: $1,036 | DOM: 12  | price_ratio: 1.01
@@ -147,7 +175,7 @@ listing.to_csv(data_p / "CRMLSListing_Engineered.csv", index=False)
 #   Alameda:       $1,125,000 | PPSF: $697   | DOM: 14  | price_ratio: 1.02
 #   Alpine:        $1,100,000 | PPSF: $267   | DOM: 231 | price_ratio: 0.67
 #   Mono:          $1,030,000 | PPSF: $619   | DOM: 68  | price_ratio: 0.94
-#
+
 # Notable observations:
 #   - Del Norte: only 2 sales, median inflated by small sample size
 #   - Santa Clara/Alameda price_ratio > 1.0: homes selling above asking
