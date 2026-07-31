@@ -51,12 +51,18 @@ print(f"  Negative timeline (either): {listing['negative_timeline_flag'].sum()}"
 listing["purchase_after_listing_flag"] = listing["ListingContractDate"] > listing["PurchaseContractDate"]
 print(f"  Purchase after listing:     {listing['purchase_after_listing_flag'].sum()}")
 
- 
-#sold = sold[~sold["listing_after_close_flag"] & ~sold["purchase_after_close_flag"]]
+
+ # Remove rows with date consistency violations
+rows_before = len(sold)
+sold = sold[~sold["negative_timeline_flag"]].copy()
+print(f"Sold rows removed (date violations): {rows_before - len(sold)}")
+
+rows_before = len(listing)
+listing = listing[~listing["negative_timeline_flag"]].copy()
+print(f"Listing rows removed (date violations): {rows_before - len(listing)}")
  
 
  
-#listing = listing[~listing["listing_after_close_flag"] & ~listing["purchase_after_close_flag"]]
 
 # Georgraphical Consistency Check
 # Missing coordinates (null Latitude or Longitude)
@@ -152,6 +158,24 @@ print("\nListing numeric dtypes:")
 for col in num_cols:
     if col in listing.columns:
         print(f"  {col}: {listing[col].dtype}")
+
+rows_before = len(sold)
+sold = sold[
+    ~sold["closeprice_flag"] &
+    ~sold["livingarea_flag"] &
+    ~sold["dom_flag"] &
+    ~sold["neg_rooms_flag"]
+].copy()
+print(f"Sold rows removed (invalid numeric): {rows_before - len(sold)}")
+
+rows_before = len(listing)
+listing = listing[
+    ~listing["closeprice_flag"] &
+    ~listing["livingarea_flag"] &
+    ~listing["dom_flag"] &
+    ~listing["neg_rooms_flag"]
+].copy()
+print(f"Listing rows removed (invalid numeric): {rows_before - len(listing)}")
 
 
 # Final Row count after cleaning 
