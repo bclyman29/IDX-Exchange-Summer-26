@@ -60,39 +60,6 @@ print(f"Sold rows removed (date violations): {rows_before - len(sold)}")
 rows_before = len(listing)
 listing = listing[~listing["negative_timeline_flag"]].copy()
 print(f"Listing rows removed (date violations): {rows_before - len(listing)}")
- 
-
- 
-
-# Georgraphical Consistency Check
-# Missing coordinates (null Latitude or Longitude)
-sold["missing_coords"] = sold["Latitude"].isna() | sold["Longitude"].isna()
-listing["missing_coords"] = listing["Latitude"].isna() | listing["Longitude"].isna()
-print(f"\nSold missing coordinates:    {sold['missing_coords'].sum()}")
-print(f"Listing missing coordinates: {listing['missing_coords'].sum()}")
- 
-sold["zero_coords"] = (sold["Latitude"] == 0) | (sold["Longitude"] == 0)
-listing["zero_coords"] = (listing["Latitude"] == 0) | (listing["Longitude"] == 0)
-print(f"Sold zero coordinates:       {sold['zero_coords'].sum()}")
-print(f"Listing zero coordinates:    {listing['zero_coords'].sum()}")
- 
-# Positive longitude 
-sold["positive_lon_flag"] = sold["Longitude"] > 0
-listing["positive_lon_flag"] = listing["Longitude"] > 0
-print(f"Sold positive longitude:     {sold['positive_lon_flag'].sum()}")
-print(f"Listing positive longitude:  {listing['positive_lon_flag'].sum()}")
- 
-# Out-of-range coordinates for California
-sold["bad_coords_flag"] = (
-    (sold["Latitude"] < 32) | (sold["Latitude"] > 42) |
-    (sold["Longitude"] < -124) | (sold["Longitude"] > -114)
-)
-listing["bad_coords_flag"] = (
-    (listing["Latitude"] < 32) | (listing["Latitude"] > 42) |
-    (listing["Longitude"] < -124) | (listing["Longitude"] > -114)
-)
-print(f"Sold out-of-range coords:    {sold['bad_coords_flag'].sum()}")
-print(f"Listing out-of-range coords: {listing['bad_coords_flag'].sum()}")
 
 # Numeric Validation Checks
 # Logically impossible values for numeric fields flagged
@@ -107,6 +74,7 @@ sold["dom_flag"] = sold["DaysOnMarket"] < 0
 print(f"  Negative DaysOnMarket:       {sold['dom_flag'].sum()}")
 sold["neg_rooms_flag"] = (sold["BathroomsTotalInteger"] < 0) | (sold["BedroomsTotal"] < 0)
 print(f"  Negative Bedrooms/Bathrooms: {sold['neg_rooms_flag'].sum()}")
+
  
 # Remove rows with invalid numeric values
 sold_before_numeric = len(sold)
@@ -138,6 +106,37 @@ listing = listing[
 ].copy()
 print(f"  Rows removed: {listing_before_numeric - len(listing)}")
 
+ 
+# Georgraphical Consistency Check
+# Missing coordinates (null Latitude or Longitude)
+sold["missing_coords"] = sold["Latitude"].isna() | sold["Longitude"].isna()
+listing["missing_coords"] = listing["Latitude"].isna() | listing["Longitude"].isna()
+print(f"\nSold missing coordinates:    {sold['missing_coords'].sum()}")
+print(f"Listing missing coordinates: {listing['missing_coords'].sum()}")
+ 
+sold["zero_coords"] = (sold["Latitude"] == 0) | (sold["Longitude"] == 0)
+listing["zero_coords"] = (listing["Latitude"] == 0) | (listing["Longitude"] == 0)
+print(f"Sold zero coordinates:       {sold['zero_coords'].sum()}")
+print(f"Listing zero coordinates:    {listing['zero_coords'].sum()}")
+ 
+# Positive longitude 
+sold["positive_lon_flag"] = sold["Longitude"] > 0
+listing["positive_lon_flag"] = listing["Longitude"] > 0
+print(f"Sold positive longitude:     {sold['positive_lon_flag'].sum()}")
+print(f"Listing positive longitude:  {listing['positive_lon_flag'].sum()}")
+ 
+# Out-of-range coordinates for California
+sold["bad_coords_flag"] = (
+    (sold["Latitude"] < 32) | (sold["Latitude"] > 42) |
+    (sold["Longitude"] < -124) | (sold["Longitude"] > -114)
+)
+listing["bad_coords_flag"] = (
+    (listing["Latitude"] < 32) | (listing["Latitude"] > 42) |
+    (listing["Longitude"] < -124) | (listing["Longitude"] > -114)
+)
+print(f"Sold out-of-range coords:    {sold['bad_coords_flag'].sum()}")
+print(f"Listing out-of-range coords: {listing['bad_coords_flag'].sum()}")
+
 
 # Numeric field dtypes confirmation
 num_cols = [
@@ -159,36 +158,29 @@ for col in num_cols:
     if col in listing.columns:
         print(f"  {col}: {listing[col].dtype}")
 
-rows_before = len(sold)
-sold = sold[
-    ~sold["closeprice_flag"] &
-    ~sold["livingarea_flag"] &
-    ~sold["dom_flag"] &
-    ~sold["neg_rooms_flag"]
-].copy()
-print(f"Sold rows removed (invalid numeric): {rows_before - len(sold)}")
-
-rows_before = len(listing)
-listing = listing[
-    ~listing["closeprice_flag"] &
-    ~listing["livingarea_flag"] &
-    ~listing["dom_flag"] &
-    ~listing["neg_rooms_flag"]
-].copy()
-print(f"Listing rows removed (invalid numeric): {rows_before - len(listing)}")
-
-
 # Final Row count after cleaning 
+# Saved flagged version for reference
+sold.to_csv(data_p / "CRMLSSold_Flagged_.csv", index=False)
+listing.to_csv(data_p / "CRMLSListing_Flagged_.csv", index=False)
+
+# Drop flag columns before saving clean final version
+flag_cols_sold = [col for col in sold.columns if 
+                  col.endswith("_flag") or 
+                  col in ["missing_coords", "zero_coords"]]
+sold = sold.drop(columns=flag_cols_sold)
+
+flag_cols_listing = [col for col in listing.columns if 
+                     col.endswith("_flag") or 
+                     col in ["missing_coords", "zero_coords"]]
+listing = listing.drop(columns=flag_cols_listing)
+
 print(f"\nSold rows after cleaning:    {len(sold)}")
 print(f"Sold columns after cleaning: {len(sold.columns)}")
 print(f"Listing rows after cleaning:    {len(listing)}")
 print(f"Listing columns after cleaning: {len(listing.columns)}")
 
-sold_clean = sold.copy()
-sold_clean.to_csv(data_p / "CRMLSSold_Final.csv", index=False)
-
-listing_clean = listing.copy()
-listing_clean.to_csv(data_p / "CRMLSListing_Final.csv", index=False)
+sold.to_csv(data_p / "CRMLSSold_Final.csv", index=False)
+listing.to_csv(data_p / "CRMLSListing_Final.csv", index=False)
 
 # Results 
 #Sold rows before cleaning:    455658 
@@ -215,14 +207,14 @@ listing_clean.to_csv(data_p / "CRMLSListing_Final.csv", index=False)
 #  Negative timeline (either): 171
 #  Purchase after listing:     312
 
-#Sold missing coordinates:    53637
-#Listing missing coordinates: 49467
+#Sold missing coordinates:    53613
+#Listing missing coordinates: 49443
 #Sold zero coordinates:       44
 #Listing zero coordinates:    62
 #Sold positive longitude:     34
 #Listing positive longitude:  69
 #Sold out-of-range coords:    114
-#Listing out-of-range coords: 226
+#Listing out-of-range coords: 225
 
 #Sold invalid numeric flags:
 #  Invalid ClosePrice (<= 0):   0
@@ -282,7 +274,7 @@ listing_clean.to_csv(data_p / "CRMLSListing_Final.csv", index=False)
  # StreetNumberNumeric: float64
  # YearBuilt: float64
 
-#Sold rows after cleaning:    455449
-#Sold columns after cleaning: 78
-#Listing rows after cleaning:    504162
-#Listing columns after cleaning: 82
+#Sold rows after cleaning:    455280
+#Sold columns after cleaning: 66
+#Listing rows after cleaning:    503991
+#Listing columns after cleaning: 70

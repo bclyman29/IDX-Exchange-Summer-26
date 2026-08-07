@@ -47,9 +47,6 @@ listing = listing.merge(listing_with_district.rename(columns={"DistrictName": "D
 listing["DistrictName"] = listing["DistrictName_listing"]
 listing = listing.drop(columns=["DistrictName_listing"])
 
-print(f"Listing district matched:   {listing['DistrictName'].notna().sum()}")
-print(f"Listing district unmatched: {listing['DistrictName'].isna().sum()}")
-
 # Listing spatial join
 listing_geo = gpd.GeoDataFrame(
     listing,
@@ -74,7 +71,7 @@ sold["close_to_original_list_ratio"] = (sold["ClosePrice"] / sold["OriginalListP
 sold["price_per_sqft"] = (sold["ClosePrice"] / sold["LivingArea"]).round(2)
 sold["year"] = sold["CloseDate"].dt.year
 sold["month"] = sold["CloseDate"].dt.month
-sold["yr_mo"] = sold["CloseDate"].dt.strftime("%Y%m")
+sold["yr_mo"] = sold["CloseDate"].dt.to_period("M").astype(str)
 sold["listing_to_contract_days"] = (sold["PurchaseContractDate"] - sold["ListingContractDate"]).dt.days
 sold["contract_to_close_days"] = (sold["CloseDate"] - sold["PurchaseContractDate"]).dt.days
 
@@ -91,7 +88,7 @@ listing["close_to_original_list_ratio"] = (listing["ClosePrice"] / listing["Orig
 listing["price_per_sqft"] = (listing["ClosePrice"] / listing["LivingArea"]).round(2)
 listing["year"] = listing["CloseDate"].dt.year
 listing["month"] = listing["CloseDate"].dt.month
-listing["yr_mo"] = listing["CloseDate"].dt.strftime("%Y%m")
+listing["yr_mo"] = listing["CloseDate"].dt.to_period("M").astype(str)
 listing["listing_to_contract_days"] = (listing["PurchaseContractDate"] - listing["ListingContractDate"]).dt.days
 listing["contract_to_close_days"] = (listing["CloseDate"] - listing["PurchaseContractDate"]).dt.days
 
@@ -132,20 +129,20 @@ listing.to_csv(data_p / "CRMLSListing_Engineered.csv", index=False)
 
 
 #Sold sample of engineered metrics:
-#   ListingKey  ClosePrice  ...  listing_to_contract_days  contract_to_close_days
-#0  1095075487   5000000.0  ...                       0.0                    63.0
-#1  1079166779    858000.0  ...                       0.0                     0.0
-#2  1075037759   1890500.0  ...                       0.0                     0.0
-#3  1067652762   2100000.0  ...                       0.0                    48.0
-#4  1061988701   2340000.0  ...                       0.0                     0.0
+#   ListingKey  ClosePrice  OriginalListPrice  LivingArea  price_ratio  price_per_sqft    yr_mo  listing_to_contract_days  contract_to_close_days
+#0  1095075487   5000000.0          5000000.0      4354.0          1.0         1148.37  2024-01                       0.0                    63.0
+#1  1079166779    858000.0                NaN      1995.0          NaN          430.08  2024-01                       0.0                     0.0
+#2  1075037759   1890500.0          1890500.0      3194.0          1.0          591.89  2024-01                       0.0                     0.0
+#3  1067652762   2100000.0          2100000.0      3736.0          1.0          562.10  2024-01                       0.0                    48.0
+#4  1061988701   2340000.0                NaN      2442.0          NaN          958.23  2024-01                       0.0                     0.0
 
 #Listing sample of engineered metrics:
-#   ListingKey  ClosePrice  ...  listing_to_contract_days  contract_to_close_days
-#0  1159972295         NaN  ...                       NaN                     NaN
-#1  1159871345    320000.0  ...                     851.0                     0.0
-#2  1153320466    160000.0  ...                     804.0                    25.0
-#3  1146529264   2000000.0  ...                     785.0                    29.0
-#4  1118382573   3200000.0  ...                      58.0                   421.0
+#   ListingKey  ClosePrice  OriginalListPrice  LivingArea  price_ratio  price_per_sqft    yr_mo  listing_to_contract_days  contract_to_close_days
+#0  1159972295         NaN           759000.0      2338.0          NaN             NaN      NaN                       NaN                     NaN
+#1  1159871345    320000.0           320000.0      1212.0       1.0000          264.03  2026-05                     851.0                     0.0
+#2  1153320466    160000.0           115900.0      1008.0       1.3805          158.73  2026-04                     804.0                    25.0
+#3  1146529264   2000000.0          2500000.0      2573.0       0.8000          777.30  2026-04                     785.0                    29.0
+#4  1118382573   3200000.0          3200000.0      1381.0       1.0000         2317.16  2025-05                      58.0                   421.0
 
 #                total_sales  
 #CountyOrParish                                                                                                   
