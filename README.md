@@ -59,3 +59,13 @@ Objectives:
 
 How to Run:
 - Set data_p to the folder containing the final cleaned datasets from Week 4-5 and the California School District GeoJSON file (DistrictAreas2526_-284845464123469011.geojson). Ensure geopandas is installed (pip3 install geopandas). Run the script with python3 market_metrics_etc_week_6.py. Upon completion, CRMLSSold_Engineered.csv and CRMLSListing_Engineered.csv will be saved to the same folder.
+--------------------------
+WEEK 7
+
+Objectives:
+- Apply IQR filtering to key numeric fields (ClosePrice, LivingArea, DaysOnMarket) across both the Sold and Listing datasets.
+- Add outlier flag columns to the original dataset rather than deleting records outright.
+- Save both a full flagged dataset and a clean filtered dataset for downstream analysis.
+
+How to Run:
+- Set data_p to the folder containing the engineered CSV files from Week 6. Run the script with python3 Week 7/outlier_detection_week7.py. Upon completion, four files will be saved to the same folder: CRMLSSold_Flagged.csv, CRMLSSold_IQR_Clean.csv, CRMLSListing_Flagged.csv, and CRMLSListing_IQR_Clean.csv.
