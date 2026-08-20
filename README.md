@@ -69,3 +69,20 @@ Objectives:
 
 How to Run:
 - Set data_p to the folder containing the engineered CSV files from Week 6. Run the script with python3 Week 7/outlier_detection_week7.py. Upon completion, four files will be saved to the same folder: CRMLSSold_Flagged.csv, CRMLSSold_IQR_Clean.csv, CRMLSListing_Flagged.csv, and CRMLSListing_IQR_Clean.csv.
+--------------------------
+Week 8-10
+
+Objectives: 
+- Import the cleaned, Residential-filtered datasets into Tableau and build two interactive workbooks covering market analysis and competitive intelligence.
+- Build all required dashboards filterable by city, county, zip code, and PropertySubType spanning January 2024 through the most recently available month.
+- Design one original market analysis dashboard and one original competitive analysis dashboard.
+
+Part 1 market_analysis.twbx:
+- Monthly median close price
+- Average days on market
+- Average close-to-original-list price ratio
+- New listings
+- Closed sales
+
+How to Run:
+- Open Tableau Desktop and connect to CRMLSSold_IQR_Clean.csv as the primary data source. Build each workbook per the dashboard requirements above and save as .twbx packaged workbook files for submission.
