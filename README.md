@@ -1,88 +1,147 @@
-# IDX-Exchange-Summer-Internship-Summer-2026
+# IDX Exchange – Summer 2026 MLS Analytics Pipeline
 
-# Overview 
-This is a summary of the following project for the 12-week summer internship at IDX exchange. The project is finding real estate market intelligence through analytical interaction with MLS data.
+`Data Pipeline` | `Tableau Dashboards` | `Market Intelligence` | `CRMLS`
 
-# Progress
-Week 0
+A 12-week analytics internship project building an end-to-end residential real estate 
+market intelligence system from raw MLS data. The pipeline ingests monthly CRMLS 
+transaction files, engineers market metrics, detects outliers, and delivers interactive 
+Tableau dashboards and a Sacramento market intelligence report.
 
-- Run extraction scripts to retrieve up to date CRMLS sold and listing data.
---------------------------
-WEEK 1
+---
 
-Objectives:
-- Combine each month's CRMLSListing and CRMLSSold CSVs into two unified datasets.
-Filter both datasets down to Residential property types only.
+## Core Capabilities
 
-How to Run:
-- Set the filepath of data_p to the folder containing the monthly CSV files. Run the script with python3 week_1.py. Upon completion, ConcatenatedCRMLSListing.csv and ConcatenatedCRMLSSold.csv will be output to the folder the script is run from.
---------------------------
-WEEK 2
+- Concatenates monthly CRMLS Sold and Listing CSVs (Jan 2024 – Jun 2026) into unified datasets
+- Merges FRED MORTGAGE30US 30-year fixed rate data onto both datasets using a year-month key
+- Engineers key market metrics: price ratio, PPSF, YrMo, listing-to-contract days, contract-to-close days
+- Maps each property to its Unified School District via spatial join on latitude/longitude
+- Detects and flags outliers using IQR filtering across ClosePrice, LivingArea, and DaysOnMarket
+- Delivers two interactive Tableau workbooks: market analysis and competitive intelligence
+- Produces a 1-page Sacramento County Market Intelligence Report with data-driven insights
 
-Objectives:
-- Inspect strucutre of combined Sold dataset
-- Find missing values per column, flagging any with above 90% null. 
-- Create a numeric distribtuion summary for ClosePrice, LivingArea, and DaysOnMarket
-- Discover key insights such outliers, sold above/below listed price, etc.
+---
 
-How to Run:
-- Set data_p to the folder containing the monthly CSV files. Run the script with python3 filter_data_week2.py. The filtered datasets will be saved as CRMLSSold_Clean.csv and CRMLSListing_Clean.csv in the same folder.
---------------------------
-WEEK 3
+## Pipeline Overview
 
-Objectives:
-- Fetch the FRED MORTGAGE30US 30-year fixed mortgage rate series directly from the St. Louis Federal Reserve.
-- Resample the weekly rate data to monthly averages and merge onto both the Sold and Listing datasets using a year-month key.
-- Validate the merge by confirming zero null rate values across both enriched datasets. 
 
-How to Run:
-- Set data_p to the folder containing the concatenated CSV files from Week 1. Ensure an internet connection is available for the FRED fetch. Run the script with python3 fred_intergration_week3.py. Upon completion, CRMLSSold_with_MortgageRates.csv and CRMLSListing_with_MortgageRates.csv will be saved to the same folder.
---------------------------
-WEEKS 4-5
+Raw monthly CSVs → `ConcatenatedCRMLSSold.csv` / `ConcatenatedCRMLSListing.csv`  
+→ `CRMLSSold_Clean.csv` / `CRMLSListing_Clean.csv`  
+→ `CRMLSSold_with_MortgageRates.csv` / `CRMLSListing_with_MortgageRates.csv`  
+→ `CRMLSSold_Final.csv` / `CRMLSListing_Final.csv`  
+→ `CRMLSSold_Engineered.csv` / `CRMLSListing_Engineered.csv`  
+→ `CRMLSSold_IQR_Clean.csv` / `CRMLSListing_IQR_Clean.csv`
 
-Objectives: 
-- Convert date fields to datetime format (CloseDate, PurchaseContractDate, ListingContractDate, ContractStatusChangeDate).
-- Create boolean flag columns for date consistency violations: listing_after_close_flag, purchase_after_close_flag, purchase_after_listing_flag, and negative_timeline_flag.
-- Flag geographic data quality issues including missing coordinates, zero coordinates, positive longitude, and out-of-range California coordinates.
-- Flag and remove invalid numeric values: LivingArea <= 0, DaysOnMarket < 0, ClosePrice <= 0, and negative Bedrooms or Bathrooms.
-- Confirm all key numeric fields are properly typed.
+--- 
 
-How to Run:
-- Run the script with "python3 data_cleaning_week4-5.py". Upon completion, "CRMLSSold_Final.csv" and "CRMLSListing_Final.csv" will be saved to the same folder as before
---------------------------
-WEEK 6
+## Tableau Public
 
-Objectives:
-- Map each property to its Unified School District using a spatial join on Latitude and Longitude against the California School District boundary GeoJSON.
-- Engineer key market metrics: price ratio, close-to-original-list ratio, price per square foot, days on market, YrMo, listing-to-contract days, and contract-to-close days.
-- Generate a segmented summary table grouped by CountyOrParish.
+Interactive dashboards are published and accessible here:  
+[Tableau Public Profile](https://public.tableau.com/app/profile/benjamin.lyman/vizzes)
 
-How to Run:
-- Set data_p to the folder containing the final cleaned datasets from Week 4-5 and the California School District GeoJSON file (DistrictAreas2526_-284845464123469011.geojson). Ensure geopandas is installed (pip3 install geopandas). Run the script with python3 market_metrics_etc_week_6.py. Upon completion, CRMLSSold_Engineered.csv and CRMLSListing_Engineered.csv will be saved to the same folder.
---------------------------
-WEEK 7
+- `market_analysis.twbx` — Market Analysis Dashboards
+- `competitive_analysis.twbx` — Competitive Intelligence Dashboards
 
-Objectives:
-- Apply IQR filtering to key numeric fields (ClosePrice, LivingArea, DaysOnMarket) across both the Sold and Listing datasets.
-- Add outlier flag columns to the original dataset rather than deleting records outright.
-- Save both a full flagged dataset and a clean filtered dataset for downstream analysis.
+---
 
-How to Run:
-- Set data_p to the folder containing the engineered CSV files from Week 6. Run the script with python3 Week 7/outlier_detection_week7.py. Upon completion, four files will be saved to the same folder: CRMLSSold_Flagged.csv, CRMLSSold_IQR_Clean.csv, CRMLSListing_Flagged.csv, and CRMLSListing_IQR_Clean.csv.
---------------------------
-Week 8-10
+## Weekly Breakdown
 
-Objectives: 
-- Import the cleaned, Residential-filtered datasets into Tableau and build two interactive workbooks covering market analysis and competitive intelligence.
-- Build all required dashboards filterable by city, county, zip code, and PropertySubType spanning January 2024 through the most recently available month.
-- Design one original market analysis dashboard and one original competitive analysis dashboard.
+### Week 1 – Aggregation
+Concatenate all monthly `CRMLSListing` and `CRMLSSold` CSVs into two unified unfiltered datasets.  
+**Run:** `python3 week_1.py`  
+**Output:** `ConcatenatedCRMLSSold.csv`, `ConcatenatedCRMLSListing.csv`
 
-Part 1 market_analysis.twbx:
-- Monthly median close price
-- Average days on market
-- Average close-to-original-list price ratio
-- New listings
-- Closed sales
+---
 
-How to Run:
-- Open Tableau Desktop and connect to CRMLSSold_IQR_Clean.csv as the primary data source. Build each workbook per the dashboard requirements above and save as .twbx packaged workbook files for submission.
+### Week 2 – Dataset Structuring and Validation
+Load both concatenated datasets, filter to Residential, drop >90% null columns, and perform EDA on the Sold dataset including missing value report, numeric distribution summary, and key market insights.  
+**Run:** `python3 filter_data_week2.py`  
+**Output:** `CRMLSSold_Clean.csv`, `CRMLSListing_Clean.csv`
+
+---
+
+### Week 3 – Mortgage Rate Integration
+Fetch the FRED MORTGAGE30US series, resample from weekly to monthly averages, and merge onto both datasets using a year-month key. Requires internet connection.  
+**Run:** `python3 fred_intergration_week3.py`  
+**Output:** `CRMLSSold_with_MortgageRates.csv`, `CRMLSListing_with_MortgageRates.csv`
+
+---
+
+### Weeks 4-5 – Data Cleaning and Preparation
+Convert date fields to datetime, flag and remove date consistency violations and invalid numeric values, flag geographic data quality issues, confirm numeric field types. Saves both a flagged copy and a clean final dataset.  
+**Run:** `python3 data_cleaning_week4-5.py`  
+**Output:** `CRMLSSold_Final.csv`, `CRMLSListing_Final.csv`, `CRMLSSold_Flagged_.csv`, `CRMLSListing_Flagged_.csv`
+
+---
+
+### Week 6 – Feature Engineering and Market Metrics
+Map properties to Unified School Districts via spatial join, engineer key market metrics (price ratio, PPSF, YrMo, listing-to-contract days, contract-to-close days), and generate segmented summary tables by county. Requires `geopandas` and the CA School District GeoJSON.  
+**Run:** `python3 market_metrics_etc_week_6.py`  
+**Output:** `CRMLSSold_Engineered.csv`, `CRMLSListing_Engineered.csv`
+
+---
+
+### Week 7 – Outlier Detection and Data Quality
+Apply IQR filtering to ClosePrice, LivingArea, and DaysOnMarket. Flag outliers in the original dataset and save a separate clean filtered dataset for analysis.  
+**Run:** `python3 outlier_detection_week7.py`  
+**Output:** `CRMLSSold_IQR_Clean.csv`, `CRMLSListing_IQR_Clean.csv`, `CRMLSSold_Flagged.csv`, `CRMLSListing_Flagged.csv`
+
+---
+
+### Weeks 8-10 – Tableau Dashboard Development
+Two interactive Tableau workbooks published to Tableau Public.
+
+**market_analysis.twbx** — filterable by city, county, zip code, and PropertySubType:
+- Monthly median close price (YoY)
+- Average days on market (YoY)
+- Average close-to-original-list price ratio (YoY)
+- New listings (YoY)
+- Closed sales (YoY)
+- Median price per square foot (YoY) — custom dashboard
+
+**competitive_analysis.twbx:**
+- Top 100 listing agents by sales volume and units
+- Top 100 listing offices by sales volume and units
+- Zip code heat map of median close prices
+- Zip code heat map of homes sold
+- Listing office market share over time — custom dashboard
+
+---
+
+### Weeks 11-12 – Market Intelligence Report and Presentation
+Sacramento County Market Intelligence Report covering market overview, pricing trends, 
+market activity, competitive landscape, and key takeaways. Delivered as a 1-page 
+document with a 5-minute live presentation.
+
+**Scripts:**
+- `sacramento_report.py` — retrieves key Sacramento market metrics from the cleaned 
+  sold dataset including median price, DOM, sold-to-list ratio, top agents, and top offices
+- `sac_deep_dive.py` — year-over-year analysis by zip code including price appreciation, 
+  DOM trends, and seasonality patterns used to build the final market narrative
+
+**Run:**
+```bash
+python3 sacramento_report.py
+python3 sac_deep_dive.py
+```
+**Output:** Sacramento County market metrics printed to terminal for use in the final report
+
+---
+
+## Prerequisites
+
+```bash
+pip3 install pandas geopandas requests pathlib
+```
+
+- Python 3.14
+- Monthly CRMLS CSV files in a local data folder
+- California School District GeoJSON (2024-25) from CA Open Data
+- Tableau Desktop for dashboard development
+
+---
+
+## Data Sources
+
+- **CRMLS via Trestle API** — monthly residential MLS transaction data (Jan 2024 – Jun 2026)
+- **FRED MORTGAGE30US** — weekly 30-year fixed mortgage rate (St. Louis Federal Reserve)
+- **CA Open Data** — California School District boundary GeoJSON (2024-25)
