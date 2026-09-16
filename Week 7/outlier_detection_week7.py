@@ -9,13 +9,16 @@ key_fields = ["ClosePrice", "LivingArea", "DaysOnMarket"]
 # BEFORE FILTERING  
 print("Before filtering:")
 print(f"Sold size: {len(sold)}")
-for col in key_fields:
-    print(f"  Sold {col} median: {sold[col].median()}")
+for col in key_fields: print(f"  Sold {col} median: {sold[col].median()}")
  
 print(f"Listing size: {len(listing)}")
-for col in key_fields:
-    print(f"  Listing {col} median: {listing[col].median()}")
+for col in key_fields: print(f"  Listing {col} median: {listing[col].median()}")
 
+print("\nListing distribution before IQR:")
+print(listing[["ClosePrice", "LivingArea", "DaysOnMarket"]].describe())
+
+print("\nSold distribution before IQR:")
+print(sold[["ClosePrice", "LivingArea", "DaysOnMarket"]].describe())
 
 # IQR OUTLIER FLAGGING AND FILTERING
 # Records outside 1.5x the IQR above Q3 or below Q1 are flagged.
@@ -46,18 +49,19 @@ for col in key_fields:
     # Flag outliers in the original dataset
     listing[f"outlier_flagged_{col}"] = (listing[col] < lower) | (listing[col] > upper)
     # Remove outliers from the filtered dataset
-    listing_filtered = listing_filtered[(listing_filtered[col] >= lower) & (listing_filtered[col] <= upper)]
+listing_filtered = listing_filtered[
+        listing_filtered[col].isna() |
+        ((listing_filtered[col] >= lower) & (listing_filtered[col] <= upper))
+    ]
 
 # AFTER FILTERING 
  
 print("\nAfter filtering:")
 print(f"Sold size: {len(sold_filtered)}")
-for col in key_fields:
-    print(f"  Sold {col} median: {sold_filtered[col].median()}")
+for col in key_fields: print(f"  Sold {col} median: {sold_filtered[col].median()}")
  
 print(f"Listing size: {len(listing_filtered)}")
-for col in key_fields:
-    print(f"  Listing {col} median: {listing_filtered[col].median()}")
+for col in key_fields: print(f"  Listing {col} median: {listing_filtered[col].median()}")
 
 sold.to_csv(data_p / "CRMLSSold_Flagged.csv", index=False)
 sold_filtered.to_csv(data_p / "CRMLSSold_IQR_Clean.csv", index=False)
@@ -65,7 +69,6 @@ listing.to_csv(data_p / "CRMLSListing_Flagged.csv", index=False)
 listing_filtered.to_csv(data_p / "CRMLSListing_IQR_Clean.csv", index=False)
 
 # Results
-
 #Before filtering:
 #Sold size: 455280
 #  Sold ClosePrice median: 815000.0

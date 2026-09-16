@@ -105,6 +105,11 @@ listing = listing[
     ~listing["neg_rooms_flag"]
 ].copy()
 print(f"  Rows removed: {listing_before_numeric - len(listing)}")
+# Drop listing rows with null ClosePrice
+# Active listings that never closed have no ClosePrice and cannot
+listing_before_null = len(listing)
+listing = listing.dropna(subset=["ClosePrice"]).copy()
+print(f"  Listing rows dropped (null ClosePrice): {listing_before_null - len(listing)}")
 
  
 # Georgraphical Consistency Check
@@ -173,6 +178,9 @@ flag_cols_listing = [col for col in listing.columns if
                      col.endswith("_flag") or 
                      col in ["missing_coords", "zero_coords"]]
 listing = listing.drop(columns=flag_cols_listing)
+
+print(listing["DaysOnMarket"].describe())
+print(listing["DaysOnMarket"].max())
 
 print(f"\nSold rows after cleaning:    {len(sold)}")
 print(f"Sold columns after cleaning: {len(sold.columns)}")
